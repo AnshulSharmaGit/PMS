@@ -1,6 +1,14 @@
 import { Request, Response } from 'express';
 import { db } from '../store';
 
+/**
+ * Get Medicines Controller
+ * 
+ * Retrieves the full list of medicines from the inventory.
+ * 
+ * @param req - Express Request object
+ * @param res - Express Response object (returns Medicine[])
+ */
 export const getMedicines = (req: Request, res: Response): void => {
     try {
         const medicines = db.getAllMedicines();
@@ -10,6 +18,15 @@ export const getMedicines = (req: Request, res: Response): void => {
     }
 };
 
+/**
+ * Create Medicine Controller
+ * 
+ * Adds a new medicine to the inventory.
+ * Validates that Name and MRP are provided.
+ * 
+ * @param req - Express Request object containing medicine details
+ * @param res - Express Response object
+ */
 export const createMedicine = (req: Request, res: Response): void => {
     try {
         const { name, manufacturer, batchNumber, expiryDate, mrp, stock } = req.body;

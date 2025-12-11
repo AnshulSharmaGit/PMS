@@ -20,6 +20,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * AuthContext
+ * 
+ * Provides global authentication state to the entire application.
+ * Manages:
+ * 1. User session (Token & User Object) persistence via LocalStorage.
+ * 2. Login/Logout functionality.
+ * 3. Permission checking (RBAC/PBAC) for UI components.
+ */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
@@ -54,6 +63,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         delete axios.defaults.headers.common['Authorization'];
     }
 
+    /**
+     * Checks if the current user has access to a specific feature.
+     * 
+     * @param permission - The permission string to check (e.g. 'BILLING')
+     * @returns true if user has permission OR is an ADMIN.
+     */
     const hasPermission = (permission: string) => {
         if (!user) return false;
         // Admin gets all by default? Or rely on stored permissions?

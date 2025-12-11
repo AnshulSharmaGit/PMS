@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import { db } from '../store';
 
+/**
+ * Get Users Controller
+ * 
+ * Retrieves all users from the database.
+ * NOTE: Passwords should generally be excluded from the response for security, 
+ * though handled here by returning a mapped object.
+ */
 export const getUsers = (req: Request, res: Response): void => {
     try {
         // In a real app, ensure to sanitize passwords out
@@ -18,6 +25,12 @@ export const getUsers = (req: Request, res: Response): void => {
     }
 };
 
+/**
+ * Update Permissions Controller
+ * 
+ * Allows Admin to manually override a user's permissions.
+ * Endpoint: PUT /api/users/:id/permissions
+ */
 export const updatePermissions = (req: Request, res: Response): void => {
     try {
         const { id } = req.params;
@@ -34,6 +47,13 @@ export const updatePermissions = (req: Request, res: Response): void => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+/**
+ * Delete User Controller
+ * 
+ * Removes a user permanently from the database.
+ * Endpoint: DELETE /api/users/:id
+ */
 export const deleteUser = (req: Request, res: Response): void => {
     try {
         const { id } = req.params;

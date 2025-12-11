@@ -2,6 +2,18 @@ import { Request, Response } from 'express';
 import { db } from '../store';
 import { TransactionItem } from '../types';
 
+/**
+ * Create Transaction Controller (POS)
+ * 
+ * Handles the Point of Sale process.
+ * 1. Validates that the requested medicines exist.
+ * 2. Checks if there is sufficient stock for each item.
+ * 3. Calculates the total price based on current MRP.
+ * 4. Records the transaction and deducts stock atomically.
+ * 
+ * @param req - Request object containing list of items (medicineId, quantity).
+ * @param res - Response object returns the created transaction receipt.
+ */
 export const createTransaction = (req: Request, res: Response): void => {
     try {
         const { items } = req.body;
@@ -49,6 +61,11 @@ export const createTransaction = (req: Request, res: Response): void => {
     }
 };
 
+/**
+ * Get Transactions Controller
+ * 
+ * Retrieves sales history for reporting.
+ */
 export const getTransactions = (req: Request, res: Response): void => {
     try {
         const transactions = db.getAllTransactions();

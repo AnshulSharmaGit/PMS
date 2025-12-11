@@ -6,6 +6,18 @@ import { User, Role } from '../types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_key_123';
 
+/**
+ * Register Controller
+ * 
+ * Handles new user registration.
+ * 1. Validates required fields.
+ * 2. Checks if the user already exists.
+ * 3. Hashes the password using bcrypt.
+ * 4. Creates the user with default permissions based on their role.
+ * 
+ * @param req - Express Request object containing email, password, name, and role.
+ * @param res - Express Response object.
+ */
 export const register = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email, password, name, role } = req.body;
@@ -38,6 +50,17 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+/**
+ * Login Controller
+ * 
+ * Handles user authentication.
+ * 1. Validates credentials.
+ * 2. Generates a JWT token for session management.
+ * 3. Returns the token and user details (including permissions) to the client.
+ * 
+ * @param req - Express Request object containing email and password.
+ * @param res - Express Response object.
+ */
 export const login = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email, password } = req.body;

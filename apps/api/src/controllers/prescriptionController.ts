@@ -2,6 +2,14 @@ import { Request, Response } from 'express';
 import { db } from '../store';
 import { PrescriptionItem } from '../types';
 
+/**
+ * Create Prescription Controller
+ * 
+ * Allows doctors to issue new prescriptions to patients.
+ * 
+ * @param req - Express Request object containing patient details and medicine items.
+ * @param res - Express Response object.
+ */
 export const createPrescription = (req: Request, res: Response): void => {
     try {
         const { patientName, doctorName, items } = req.body;
@@ -27,6 +35,11 @@ export const createPrescription = (req: Request, res: Response): void => {
     }
 };
 
+/**
+ * Get Prescriptions Controller
+ * 
+ * Retrieves all prescriptions (history) from the database.
+ */
 export const getPrescriptions = (req: Request, res: Response): void => {
     try {
         const prescriptions = db.getAllPrescriptions();
@@ -36,6 +49,14 @@ export const getPrescriptions = (req: Request, res: Response): void => {
     }
 };
 
+/**
+ * Fulfill Prescription Controller
+ * 
+ * Marks a prescription as fulfilled (medicines handed over to patient).
+ * Typically done by the Pharmacist.
+ * 
+ * @param req - Request object with prescription ID
+ */
 export const fulfillPrescription = (req: Request, res: Response): void => {
     try {
         const { id } = req.params;

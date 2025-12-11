@@ -6,11 +6,20 @@ import bcrypt from 'bcryptjs';
 
 import { sqlite, initDb } from './database';
 
+/**
+ * Store Class
+ * 
+ * Manages all database interactions using Better-SQLite3.
+ * Acts as a Data Access Layer (DAL) for the application.
+ */
 class Store {
+    /**
+     * Initializes the database connection and seeds critical default data.
+     * Ensures an Admin user exists on startup.
+     */
     constructor() {
-        initDb();
-        this.seedAdmin();
-        // Seed medicines if empty? skipping for now or user can add via UI.
+        initDb(); // Creates tables if they don't exist
+        this.seedAdmin(); // Ensures at least one admin account
     }
 
     private seedAdmin() {
@@ -27,6 +36,13 @@ class Store {
         }
     }
 
+    /**
+     * Creates a new user in the database.
+     * Automatically assigns default permissions based on the user's role if none are provided.
+     * 
+     * @param userData - The user details (name, email, password, role, etc.)
+     * @returns The created User object with its generated ID.
+     */
     createUser(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): User {
         let initialPermissions = userData.permissions || [];
         if (initialPermissions.length === 0) {
@@ -73,6 +89,14 @@ class Store {
         };
     }
 
+    /**
+    * Updates the specific access permissions for a user.
+    * This allows for granular access control beyond just Role-Based Access.
+    * 
+    * @param id - The ID of the user to update
+    * @param permissions - Array of permission strings (e.g., ['INVENTORY', 'BILLING'])
+    * @returns The updated User object, or undefined if user not found.
+    */
     updateUserPermissions(id: number, permissions: string[]): User | undefined {
         const stmt = sqlite.prepare(`
             UPDATE users SET permissions = ?, updatedAt = ? WHERE id = ?
@@ -253,6 +277,16 @@ class Store {
     }
 
     // Transactions
+    /**
+    * Records a new sales transaction.
+    * Uses a database TRANSACTION to ensure two critical things happen atomically:
+    * 1. The transaction record is created.
+    * 2. The stock level for each medicine is deducted.
+    * If one fails, the entire operation rolls back to prevent data inconsistency.
+    * 
+    * @param data - The transaction total and list of items sold.
+    * @returns The created Transaction object.
+    */
     createTransaction(data: Omit<Transaction, 'id' | 'createdAt'>): Transaction {
         const now = new Date().toISOString();
 
