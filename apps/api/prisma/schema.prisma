@@ -6,3 +6,80 @@ datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
 }
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  name        String
+  role        String   // Storing Enum as String
+  permissions String   // Storing string[] as JSON/String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Medicine {
+  id          Int      @id @default(autoincrement())
+  name        String
+  manufacturer String
+  batchNumber String
+  expiryDate  DateTime
+  mrp         Float
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations could be added, but for now we follow the Loose coupling of previous MVP?
+  // Actually, TransactionItem and PrescriptionItem refer to it.
+}
+
+model Prescription {
+  id          Int      @id @default(autoincrement())
+  patientName String
+  doctorName  String
+  status      String   // PENDING | FULFILLED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  items       PrescriptionItem[]
+}
+
+model PrescriptionItem {
+  id             Int          @id @default(autoincrement())
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
+  prescriptionId Int
+  medicineId     Int
+  medicineName   String
+  dosage         String
+  duration       String
+  quantity       Int
+}
+
+model Appointment {
+  id          Int      @id @default(autoincrement())
+  patientName String
+  doctorName  String
+  date        String
+  time        String
+  status      String   // SCHEDULED, etc.
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Transaction {
+  id          Int               @id @default(autoincrement())
+  totalAmount Float
+  createdAt   DateTime          @default(now())
+  items       TransactionItem[]
+}
+
+model TransactionItem {
+  id            Int         @id @default(autoincrement())
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  transactionId Int
+  medicineId    Int
+  medicineName  String
+  quantity      Int
+  priceCheck    Float
+  total         Float
+}
