@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
-    const { user, logout } = useAuth();
+    useAuth();
 
     return (
         <div className="min-h-screen bg-slate-50 p-8">

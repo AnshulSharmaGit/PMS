@@ -14,7 +14,7 @@ interface Medicine {
 }
 
 export const Inventory: React.FC = () => {
-    const { user } = useAuth();
+    useAuth();
     const queryClient = useQueryClient();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 

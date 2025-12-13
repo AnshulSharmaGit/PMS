@@ -18,7 +18,7 @@ interface CartItem {
 }
 
 export const Billing: React.FC = () => {
-    const { user } = useAuth();
+    useAuth();
     const queryClient = useQueryClient();
     const [cart, setCart] = useState<CartItem[]>([]);
     const [selectedMedId, setSelectedMedId] = useState<number>(0);

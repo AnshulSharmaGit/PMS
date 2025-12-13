@@ -14,7 +14,7 @@ interface Appointment {
 }
 
 export const Appointments: React.FC = () => {
-    const { user } = useAuth();
+    useAuth();
     const queryClient = useQueryClient();
     const [isBookOpen, setIsBookOpen] = useState(false);
 
